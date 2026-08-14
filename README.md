@@ -30,5 +30,5 @@ You win when you hit 4 Bulls!
 
 # Running the Game
 * bash
-* git clone [https://github.com/elisneumann/bulls-and-cows.git](https://github.com/elisneumann/bulls-and-cows.git)
+* git clone [https://github.com/elisneumann/bulls_and_cows.git](https://github.com/elisneumann/bulls_and_cows.git)
 * cd bulls-and-cows
