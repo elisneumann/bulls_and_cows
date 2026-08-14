@@ -6,21 +6,21 @@ A classical code-breaking logic game written in Python. The player attempts to g
 
 The computer generates a secret 4-digit number using unique digits (from 0 to 9). After each of your guesses, the game provides feedback with two numbers:
 
-**Bulls**: Correct digits in the correct position.
-**Cows:** Correct digits in the wrong position.
+* **Bulls**: Correct digits in the correct position.
+* **Cows:** Correct digits in the wrong position.
 
 **Example:** 
-**Secret Number:** 3914
-**Your Guess:** 1954
-**Feedback:** 2 Bulls (for 9 and 4) and 1 Cow (for 1).
+* **Secret Number:** 3914
+* **Your Guess:** 1954
+* **Feedback:** 2 Bulls (for 9 and 4) and 1 Cow (for 1).
 
 You win when you hit 4 Bulls!
 
 # Features
 
-**Input Validation:** Prevents invalid inputs (non-digits, repeated digits, or lengths other than 4).
-**Interactive CLI Menu:** Easy navigation to play, read rules, or exit using Python's match-case.
-**Clean Code Architecture:** Built with proper type hinting, docstrings, and safe execution loops.
+* **Input Validation:** Prevents invalid inputs (non-digits, repeated digits, or lengths other than 4).
+* **Interactive CLI Menu:** Easy navigation to play, read rules, or exit using Python's match-case.
+* **Clean Code Architecture:** Built with proper type hinting, docstrings, and safe execution loops.
 
 
 # How to Run
@@ -29,8 +29,6 @@ You win when you hit 4 Bulls!
 **Python 3.10+** (required for match-case syntax)
 
 # Running the Game
-
-1. **Clone the repository:**
-   bash
-   git clone [https://github.com/elisneumann/bulls-and-cows.git](https://github.com/elisneumann/bulls-and-cows.git)
-   cd bulls-and-cows
+* bash
+* git clone [https://github.com/elisneumann/bulls-and-cows.git](https://github.com/elisneumann/bulls-and-cows.git)
+* cd bulls-and-cows
