@@ -23,23 +23,47 @@ def show_rules() -> None:
 
 def menu() -> int | None:
     """This function opens up a menu with different options a user can choose from"""
+    game_difficulty = 2
+    previous_moves_switch = True
 
     while True:
-        print(
-            "1. Start a new game \n"
+        print("1. Start a new game \n"
             "2. Read the rules \n"
             "3. Change game difficulty\n"
-            "4. Exit"
-        )
+            "4. Manage display\n"
+            "5. Exit")
+
 
         match input("Your move: "):
             case "1":
-                start_game()
+                start_game(game_difficulty, previous_moves_switch)
             case "2":
                 show_rules()
             case "3":
-                start_game(choose_game_difficulty())
+                game_difficulty = choose_game_difficulty()
+                match game_difficulty:
+                    case 1:
+                        print("Game difficulty changed to Easy (3-digit)")
+                    case 2:
+                        print("Game difficulty changed to Standard (4-digit)")
+                    case 3:
+                        print("Game difficulty changed to Hardcore (5-digit)")
             case "4":
+                if previous_moves_switch:
+                    print("Would you like to hide your previous moves?")
+                    print("1. Yes\n2. No")
+                    if input() == "1":
+                        previous_moves_switch = False
+                    else:
+                        continue
+                else:
+                    print("Would you like to show your previous moves?")
+                    print("1. Yes\n2. No")
+                    if input() == "1":
+                        previous_moves_switch = True
+                    else:
+                        continue
+            case "5":
                 break
             case _:
                 continue
@@ -47,9 +71,7 @@ def menu() -> int | None:
 
 def choose_game_difficulty() -> int:
     print("What difficulty would you like to play?")
-    print(
-        "1. Easy (3-digit number)\n2. Standard (4-digit number)\n3. Hardcore (5-digit number)"
-    )
+    print("1. Easy (3-digit number)\n2. Standard (4-digit number)\n3. Hardcore (5-digit number)")
     match input():
         case "1":
             return 1
@@ -92,9 +114,7 @@ def call_victory_menu(guessed_number: list[int], moves: int) -> None:
     """This function appears when a user wins. It shows a victory message."""
 
     target_str = "".join(map(str, guessed_number))
-    print(
-        f"Congratulations! Your guess was correct! The target number was indeed {target_str}"
-    )
+    print(f"Congratulations! Your guess was correct! The target number was indeed {target_str}")
 
     if moves == 1:
         print(f"It took you {moves} move to guess this number\n")
@@ -106,9 +126,10 @@ def make_user_guess(difficulty: int | None) -> list[int]:
     """This function asks user to take a guess"""
 
     target_len = 4
+
     if difficulty == 1:
         target_len = 3
-    elif difficulty == 2 or difficulty is None:
+    elif difficulty == 2:
         target_len = 4
     elif difficulty == 3:
         target_len = 5
@@ -117,9 +138,7 @@ def make_user_guess(difficulty: int | None) -> list[int]:
         user_guess = input("Your guess: ")
 
         if not len(user_guess) == target_len or not user_guess.isdigit():
-            print(
-                f"Wrong input! Your guess must be a {target_len}-digit number. Try again!"
-            )
+            print(f"Wrong input! Your guess must be a {target_len}-digit number. Try again!")
         elif len(set(user_guess)) != target_len:
             print("Digits must be unique! Try again!")
         else:
@@ -128,7 +147,7 @@ def make_user_guess(difficulty: int | None) -> list[int]:
     return list(map(int, list(user_guess)))
 
 
-def start_game(difficulty: int | None = None) -> None:
+def start_game(difficulty: int | None = None, show_prev_moves: bool = True) -> None:
     """This function allows user to start a game"""
     match difficulty:
         case 1:
@@ -140,6 +159,7 @@ def start_game(difficulty: int | None = None) -> None:
 
     moves_counter = 0
     surrender = False
+    previous_moves = {}
 
     print("The computer made its choice!")
 
@@ -149,39 +169,28 @@ def start_game(difficulty: int | None = None) -> None:
         bulls_count = check_for_bulls(target_number, user_guess)
         cows_count = check_for_cows(target_number, user_guess)
 
-        match difficulty:
-            case 1:
-                if bulls_count == 3:
-                    moves_counter += 1
-                    break
-                else:
-                    print(
-                        f"You got: \n {bulls_count} bulls; \n {cows_count} cows."
-                    )
-                    moves_counter += 1
-            case 3:
-                if bulls_count == 5:
-                    moves_counter += 1
-                    break
-                else:
-                    print(
-                        f"You got: \n {bulls_count} bulls; \n {cows_count} cows."
-                    )
-                    moves_counter += 1
-            case _:
-                if bulls_count == 4:
-                    moves_counter += 1
-                    break
-                else:
-                    print(
-                        f"You got: \n {bulls_count} bulls; \n {cows_count} cows."
-                    )
-                    moves_counter += 1
+        if bulls_count == len(target_number):
+            moves_counter += 1
+            break
+        else:
+            print(f"You got: \n{bulls_count} bulls; \n{cows_count} cows.")
+            moves_counter += 1
+
+            if show_prev_moves:
+                user_guess_str = "".join(map(str, user_guess))
+                previous_moves[user_guess_str] = f"{bulls_count} bulls, {cows_count} cows"
+
+                print("-" * 10)
+
+                print("Your previous moves:")
+
+                for key, value in previous_moves.items():
+                    print(f"{key}: {value}")
+
+                print("-" * 10)
 
         if moves_counter % 5 == 0:
-            print(
-                f"You have already made {moves_counter} moves. Would you like to surrender?"
-            )
+            print(f"You have already made {moves_counter} moves. Would you like to surrender?")
             print("1. Continue game \n2. Surrender")
             match input():
                 case "1":
@@ -189,9 +198,7 @@ def start_game(difficulty: int | None = None) -> None:
                 case "2":
                     target_str = "".join(map(str, target_number))
                     surrender = True
-                    print(
-                        f"You were close enough! The guessed number was {target_str}\n"
-                    )
+                    print(f"You were close enough! The guessed number was {target_str}\n")
                     break
                 case _:
                     pass
